@@ -1,0 +1,55 @@
+[0m[[0m[31merror[0m] [0m[0mC:\Users\47937\Desktop\IT+\ITSD-DT2023-24-Template\app\events\EndTurnClicked.java:30:1: 类重复: events.EndTurnClicked[0m
+[0m[[0m[31merror[0m] [0m[0mpublic class EndTurnClicked implements EventProcessor{[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m	@Override[0m
+[0m[[0m[31merror[0m] [0m[0m	public void processEvent(ActorRef out, GameState gameState, JsonNode message) {[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//结束当前玩家的操作[0m
+[0m[[0m[31merror[0m] [0m[0m		gameState.gameLock = true;[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//执行AI的操作[0m
+[0m[[0m[31merror[0m] [0m[0m		//添加mana[0m
+[0m[[0m[31merror[0m] [0m[0m		gameState.players[1].setMana(gameState.currentMaxMana);[0m
+[0m[[0m[31merror[0m] [0m[0m		BasicCommands.setPlayer2Mana(out, gameState.players[1]);[0m
+[0m[[0m[31merror[0m] [0m[0m		try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//拿牌[0m
+[0m[[0m[31merror[0m] [0m[0m		gameState.Player2CurrentCardSend++;[0m
+[0m[[0m[31merror[0m] [0m[0m		if(gameState.Player2CurrentCardSend < gameState.Player2Cards.size()){[0m
+[0m[[0m[31merror[0m] [0m[0m			gameState.Player2currentCards.add(gameState.Player2Cards.get(gameState.Player2CurrentCardSend));[0m
+[0m[[0m[31merror[0m] [0m[0m		}[0m
+[0m[[0m[31merror[0m] [0m[0m		try {Thread.sleep(20);} catch (InterruptedException e) {e.printStackTrace();}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//遍历所有单位[0m
+[0m[[0m[31merror[0m] [0m[0m		for (Map.Entry<Integer, Unit> entry : gameState.Player2unitList.entrySet()){[0m
+[0m[[0m[31merror[0m] [0m[0m			gameState.unitControl(out, entry.getValue());[0m
+[0m[[0m[31merror[0m] [0m[0m		}[0m
+[0m[[0m[31merror[0m] [0m[0m		try {Thread.sleep(20);} catch (InterruptedException e) {e.printStackTrace();}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//以本体单位锁定对面的最近目标[0m
+[0m[[0m[31merror[0m] [0m[0m		Unit target = gameState.findUnits(gameState.Player2unitList.get(0));[0m
+[0m[[0m[31merror[0m] [0m[0m		Tile t = BasicObjectBuilders.loadTile(target.getPosition().getTilex(), target.getPosition().getTiley());[0m
+[0m[[0m[31merror[0m] [0m[0m		try {Thread.sleep(20);} catch (InterruptedException e) {e.printStackTrace();}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//遍历当前发的牌[0m
+[0m[[0m[31merror[0m] [0m[0m		for(Card card : gameState.Player2currentCards){[0m
+[0m[[0m[31merror[0m] [0m[0m			//有牌小于当前mana就打出[0m
+[0m[[0m[31merror[0m] [0m[0m			if(card.getManacost() < gameState.players[1].getMana()){[0m
+[0m[[0m[31merror[0m] [0m[0m				gameState.cardUse(card, t, target);[0m
+[0m[[0m[31merror[0m] [0m[0m				gameState.players[1].setMana(gameState.players[1].getMana() - card.getManacost());[0m
+[0m[[0m[31merror[0m] [0m[0m			}[0m
+[0m[[0m[31merror[0m] [0m[0m		}[0m
+[0m[[0m[31merror[0m] [0m[0m		try {Thread.sleep(20);} catch (InterruptedException e) {e.printStackTrace();}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//回合结束，触发增加魔法上限[0m
+[0m[[0m[31merror[0m] [0m[0m		if(gameState.currentMaxMana < 9){gameState.currentMaxMana++;}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//清零Mana显示[0m
+[0m[[0m[31merror[0m] [0m[0m		gameState.players[1].setMana(0);[0m
+[0m[[0m[31merror[0m] [0m[0m		BasicCommands.setPlayer2Mana(out, gameState.players[1]);[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m		//触发endturn解锁[0m
+[0m[[0m[31merror[0m] [0m[0m		gameState.gameLock = false;[0m
+[0m[[0m[31merror[0m] [0m[0m	}[0m
+[0m[[0m[31merror[0m] [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m}[0m
