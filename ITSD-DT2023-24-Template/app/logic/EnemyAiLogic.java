@@ -23,6 +23,8 @@ public class EnemyAiLogic {
     }
 
     public void action() {
+        //todo : 写死法力值
+        gameState.players[1].setMana(9);
         //AI取牌
         if(gameState.Player2CurrentCardSend < gameState.Player2Cards.size()){
             gameState.Player2currentCards.add(gameState.Player2Cards.get(gameState.Player2CurrentCardSend));
